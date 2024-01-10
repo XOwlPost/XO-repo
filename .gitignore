@@ -1,0 +1,12 @@
+node_modules/
+vendor/
+.env
+dist/
+build/
+.cache/
+.DS_Store
+Thumbs.db
+.idea/
+*.log
+tmp/
+temp/
