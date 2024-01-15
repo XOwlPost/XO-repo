@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nodejs-PackageManagers-Setup.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Base16 Atelier Lakeside Light - Theme */
+/* by Bram de Haan (http://atelierbram.github.io/syntax-highlighting/atelier-schemes/lakeside) */
+/* Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16) */
+
+/* Atelier-Lakeside Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #5a7b8c;
+}
+
+/* Atelier-Lakeside Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attribute,
+.hljs-tag,
+.hljs-name,
+.hljs-regexp,
+.hljs-link,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #d22d72;
+}
+
+/* Atelier-Lakeside Orange */
+.hljs-number,
+.hljs-meta,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params {
+  color: #935c25;
+}
+
+/* Atelier-Lakeside Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet {
+  color: #568c3b;
+}
+
+/* Atelier-Lakeside Blue */
+.hljs-title,
+.hljs-section {
+  color: #257fad;
+}
+
+/* Atelier-Lakeside Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #6b6bb8;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #ebf8ff;
+  color: #516d7b;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>The Node.js and NPM/Yarn section suited the specifics of our project:</p>
+<hr>
+<h2 id="nodejs-and-package-managers-setup">Node.js and Package Managers Setup</h2>
+<p>Requiring the use of NVM (Node Version Manager) in our project is a practical approach, our project consists of multiple submodules that may require different versions of Node.js.</p>
+<hr>
+<h3 id="nodejs">Node.js</h3>
+<p>Many of our submodules are Node.js applications. Given the diversity of these submodules, different parts of the project may require different versions of Node.js. To ensure compatibility and proper functioning, it's essential to manage these versions effectively.</p>
+<h3 id="installing-nodejs">Installing Node.js:</h3>
+<ol>
+<li>
+<p><strong>Visit the Official Node.js Website</strong>:</p>
+<ul>
+<li>To get started, download and install Node.js from the <a href="https://nodejs.org/">official Node.js website</a>.</li>
+<li>We recommend using the Long-Term Support (LTS) version for its stability and broad support.</li>
+</ul>
+</li>
+<li>
+<p><strong>Specific Node.js Versions</strong>:</p>
+<ul>
+<li>Some submodules may require specific Node.js versions. This information is typically specified in the submodule's documentation or <code>package.json</code> file.</li>
+</ul>
+</li>
+</ol>
+<h3 id="requirement-using-nvm-node-version-manager">Requirement: Using NVM (Node Version Manager)</h3>
+<p>Given the need for multiple Node.js versions, <strong>we require all developers to use NVM (Node Version Manager)</strong>. NVM simplifies the process of managing and switching between different Node.js versions.</p>
+<ol>
+<li>
+<p><strong>Why NVM</strong>:</p>
+<ul>
+<li>NVM allows you to install multiple versions of Node.js and switch between them depending on the submodule you're working on.</li>
+<li>It ensures that all developers are using the exact version of Node.js required for each part of the project, avoiding version-related inconsistencies and bugs.</li>
+</ul>
+</li>
+<li>
+<p><strong>Installing NVM</strong>:</p>
+<ul>
+<li>Follow the installation and usage instructions on the <a href="https://github.com/nvm-sh/nvm">NVM GitHub repository</a> to set up NVM on your machine.</li>
+<li>After installing NVM, you can install and use different Node.js versions as needed.</li>
+</ul>
+</li>
+<li>
+<p><strong>Using NVM</strong>:</p>
+<ul>
+<li>To install a specific version of Node.js:<pre class="hljs"><code><div>nvm install &lt;version&gt;
+</div></code></pre>
+</li>
+<li>To switch to a specific version:<pre class="hljs"><code><div>nvm use &lt;version&gt;
+</div></code></pre>
+</li>
+<li>Ensure that you switch to the correct Node.js version before working on a submodule.</li>
+</ul>
+</li>
+</ol>
+<h3 id="conclusion">Conclusion</h3>
+<p>Using NVM in our project setup is essential for managing the various Node.js versions required by different submodules. This approach ensures a consistent and stable development environment for everyone on the team. If you have any questions or need assistance with setting up NVM, please don't hesitate to reach out to the team for support.</p>
+<hr>
+<p>This documentation clearly states the requirement of using NVM, outline its benefits, and provide guidance on installation and usage. This approach will help standardize the development environment across our team and ensure smooth handling of multiple Node.js versions.</p>
+<hr>
+<h3 id="npm-and-yarn">NPM and Yarn</h3>
+<p>NPM (Node Package Manager) and Yarn are tools for managing project dependencies. NPM is automatically installed with Node.js, while Yarn is an alternative that offers some performance and usability improvements.</p>
+<ol>
+<li>
+<p><strong>NPM</strong>:</p>
+<ul>
+<li>Comes bundled with Node.js.</li>
+<li>Used to install dependencies specified in a <code>package.json</code> file.</li>
+<li>Verify NPM installation by running <code>npm --version</code> in your terminal.</li>
+</ul>
+</li>
+<li>
+<p><strong>Yarn</strong>:</p>
+<ul>
+<li>Some of our submodules might use Yarn due to its faster installation times and improved lockfile format.</li>
+<li>To install Yarn, follow the instructions on the <a href="https://classic.yarnpkg.com/en/docs/install">official Yarn website</a>.</li>
+<li>Verify Yarn installation by running <code>yarn --version</code> in your terminal.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="managing-dependencies-with-yarn">Managing Dependencies with Yarn</h3>
+<p>Our project utilizes Yarn for efficient dependency management across all submodules. Yarn ensures that we have consistent dependency installations, improves performance, and offers a reliable lockfile format. Here’s how to manage dependencies in our project:</p>
+<ol>
+<li>
+<p><strong>Installing Dependencies</strong>:</p>
+<ul>
+<li>After cloning a submodule or pulling the latest changes, it's essential to install its dependencies to ensure that you have all the necessary packages.</li>
+<li>Navigate to the root directory of the submodule:<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> path/to/submodule
+</div></code></pre>
+</li>
+<li>Run the following command to install dependencies:<pre class="hljs"><code><div>yarn install
+</div></code></pre>
+</li>
+<li>This command reads the <code>package.json</code> file in the submodule, installs the required packages, and generates a <code>yarn.lock</code> file that locks the installed versions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Consistent Dependency Versions</strong>:</p>
+<ul>
+<li>The <code>yarn.lock</code> file ensures that every team member gets the same versions of dependencies, leading to fewer &quot;works on my machine&quot; issues.</li>
+<li>Commit the <code>yarn.lock</code> file to your Git repository to maintain consistency across all environments.</li>
+</ul>
+</li>
+<li>
+<p><strong>Adding New Dependencies</strong>:</p>
+<ul>
+<li>To add a new package to a submodule:<pre class="hljs"><code><div>yarn add package-name
+</div></code></pre>
+</li>
+<li>This will update both the <code>package.json</code> and <code>yarn.lock</code> files. Make sure to commit these changes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Updating Dependencies</strong>:</p>
+<ul>
+<li>To update a specific package:<pre class="hljs"><code><div>yarn upgrade package-name
+</div></code></pre>
+</li>
+<li>To update all packages to their latest versions based on the version ranges specified in <code>package.json</code>:<pre class="hljs"><code><div>yarn upgrade
+</div></code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Using Yarn in Docker Compose</strong>:</p>
+<ul>
+<li>Our <code>docker-compose.yml</code> file is configured to build Docker images for each submodule. During the build process, <code>yarn install</code> is automatically run, ensuring that all required dependencies are included in the Docker image.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="conclusion">Conclusion</h3>
+<p><strong>Dependency Management with Yarn:</strong></p>
+<ul>
+<li>Yarn plays a crucial role in our development process, particularly in managing dependencies across our multi-module project. It ensures consistency, reliability, and efficiency, making it an indispensable tool for our setup.</li>
+<li>For any queries or issues related to dependency management with Yarn, such as package installations, feel free to reach out to the team. We're here to help ensure a smooth development experience.</li>
+</ul>
+<p><strong>Node.js and Package Managers:</strong></p>
+<ul>
+<li>The correct setup of Node.js, along with the use of Yarn as our package manager, is essential for the development and operation of our Node.js applications. This setup ensures compatibility and functionality across all submodules.</li>
+<li>We recommend using the specified Node.js versions and leveraging NVM for managing multiple versions efficiently. This approach helps in maintaining a consistent development environment and avoids compatibility issues.</li>
+<li>Should you encounter any difficulties or have questions about setting up Node.js, NVM, Yarn, or managing Node.js applications, our team is always available to assist and provide guidance.</li>
+</ul>
+<hr>
+<p>This comprehensive conclusion brings together the key aspects of using Yarn for dependency management and the importance of the correct Node.js setup. It provides a clear message on the importance of these tools in our project's development workflow and encourages team collaboration and support.</p>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  likes-token-v2:
+    build: ./XO/LikesTokenV2
+    ports:
+      - "3000:3000"  
+  tictactoe: # Define other services for other submodules similarly
+    build: ./XO/TicTacToe
+    ports:
+      - "3001:3000"
+networks:
+  default:
+    name: xo-network
+```
+Then you can run `docker-compose up` to start all the services. You can also run `docker-compose up likes-token-v2` to start only the `likes-token-v2` service.
+
+# Your `docker-compose.yml` configuration looks good for setting up a multi-container environment for the `likes-token-v2` and `tictactoe` services. Here are a few additional tips and clarifications to ensure a smooth setup:
+
+# 1. **Docker Build Context**:
+ #  - Ensure that the `build` paths (`./XO/LikesTokenV2` and `./XO/TicTacToe`) correctly point to the directories where the respective Dockerfiles are located.
+
+# 2. **Port Mapping**:
+ #  - The `ports` configuration maps ports from the container to your host machine. Make sure the ports specified (`3000:3000` for `likes-token-v2` and `3001:3000` for `tictactoe`) are appropriate for your application. The format is `HOST:CONTAINER`.
+
+# 3. **Network Configuration**:
+ #  - The `default` network `xo-network` will allow your services to communicate with each other. If your services need to interact, this setup will facilitate that communication.
+
+# 4. **Environment Variables**:
+ #  - If your services require environment variables, you can specify them directly in the `docker-compose.yml` file under each service using the `environment` key, or you can use an `.env` file.
+
+# 5. **Volumes for Persistent Data**:
+ #  - If you need persistent storage (for databases, for example) or want to sync directories between your host and containers, define `volumes` in your service configurations.
+
+# 6. **Running Specific Services**:
+ #  - As you mentioned, `docker-compose up` will start all services. You can indeed start individual services by specifying their names, like `docker-compose up likes-token-v2`.
+
+# 7. **Testing and Validation**:
+   - After running `docker-compose up`, test each service to ensure they are running as expected and can communicate with each other if needed.
+
+# 8. **Stopping and Cleaning Up**:
+ #  - To stop all services, you can use `docker-compose down`. This command stops and removes any containers, networks, and volumes created by `docker-compose up`.
+
+# 9. **Documentation**:
+ #  - Document how to use this `docker-compose` setup in your project's README or documentation, including any prerequisites, how to start and stop services, and any other relevant details.
+
+# This `docker-compose` setup should significantly streamline your development workflow, making it easier to manage multiple services and their dependencies.
