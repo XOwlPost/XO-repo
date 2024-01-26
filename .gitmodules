@@ -1,1 +1,4 @@
 
+[submodule "Discord"]
+	path = Discord
+	url = https://github.com/XOwlPost/Discord
